@@ -47,11 +47,11 @@ These are the checks I built into the scoring system. Each one adds points to th
 Once all signals are tallied up, the score gets capped at 100 and labelled:
 
 ```
- 0–20  ✅ Genuine
-21–40  🟡 Low Suspicion
-41–60  🟠 Moderate
-61–80  🔴 High Suspicion
-81–100 🚨 Likely Fake
+ 0–20   Genuine
+21–40   Low Suspicion
+41–60   Moderate
+61–80   High Suspicion
+81–100  Likely Fake
 ```
 
 ---
@@ -70,13 +70,13 @@ Running this on 35,912 real hotel reviews:
 ## Dashboard tabs
 
 ```
-📊 Overview           stats summary, donut chart, rating breakdown, zoomable timeline
-🚨 Suspicious Reviews  top flagged reviews shown as investigation-style cards
-🏨 Hotels             click any hotel bar to drill into its individual reviews
-📡 Signals            radar chart + bar chart, click a signal to see which reviews triggered it
-🌡️ Heatmap            hotel × signal grid showing where fraud clusters
-📋 Duplicates         groups of near-identical reviews side by side
-🔎 Search             search by hotel name or keyword + live single review scorer
+ Overview            Stats summary, donut chart, rating breakdown, zoomable timeline
+ Suspicious Reviews  Top flagged reviews shown as investigation-style cards
+ Hotels              Click any hotel bar to drill into its individual reviews
+ Signals             radar chart + bar chart, click a signal to see which reviews triggered it
+ Heatmap             hotel × signal grid showing where fraud clusters
+ Duplicates          groups of near-identical reviews side by side
+ Search              search by hotel name or keyword + live single review scorer
 ```
 
 ---
@@ -165,31 +165,13 @@ fake-review-detector/
 
 ---
 
-## Deploying it online (free)
-
-1. Push this repo to GitHub
-2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub and select this repo
-4. Set the main file to `app.py`
-5. Hit deploy — you'll get a public link straight away
-
----
-
-## What I'd add next
-
-- [ ] Train an actual ML classifier using the suspicion scores as training labels
-- [ ] Build a FastAPI endpoint so other apps can score reviews via API
-- [ ] Add a database so results persist between sessions
-- [ ] Email alerts when a burst is detected
-- [ ] Language detection for non-English reviews
-
 ---
 
 ## About me
 
 **Blessing Iloka**
 - GitHub: [@luchiiloka](https://github.com/luchiiloka)
-- Email: bi21aaj@herts.ac.uk
+- Email: boluchi23@gmail.com
 
 ---
 
