@@ -10,7 +10,7 @@
 
 I built this project because I kept wondering how many of the reviews I read online are actually real? Platforms like TripAdvisor and Booking.com have millions of reviews, and it's genuinely hard to know which ones to trust. So I decided to build something that tries to answer that question using data.
 
-This tool takes a dataset of hotel reviews and scores every single one across 8 different fraud signals — things like suspiciously short text, duplicate reviews posted across multiple hotels, or a reviewer who somehow visited 5 different hotels on the same day. Each review ends up with a suspicion score from 0 to 100, and the results are displayed in an interactive dashboard you can explore.
+This tool takes a dataset of hotel reviews and scores every single one across 8 different fraud signals things like suspiciously short text, duplicate reviews posted across multiple hotels, or a reviewer who somehow visited 5 different hotels on the same day. Each review ends up with a suspicion score from 0 to 100, and the results are displayed in an interactive dashboard you can explore.
 
 ---
 
