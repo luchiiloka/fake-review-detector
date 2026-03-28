@@ -1,7 +1,5 @@
 # 🔍 Fake Review Detector
 
-> An AI-powered fraud detection system that analyses hotel reviews to identify suspicious, fake, and manipulated content using statistical patterns and NLP text analysis.
-
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)
@@ -10,150 +8,155 @@
 
 ---
 
-## 📌 Project Overview
+I built this project because I kept wondering — how many of the reviews I read online are actually real? Platforms like TripAdvisor and Booking.com have millions of reviews, and it's genuinely hard to know which ones to trust. So I decided to build something that tries to answer that question using data.
 
-This project analyses **35,000+ real hotel reviews** and scores each one across **8 fraud detection signals** to identify potentially fake or manipulated content. Results are displayed in a fully interactive web dashboard built with Streamlit and Plotly.
-
-### 🎯 Why This Matters
-Fake reviews cost businesses and consumers billions annually. Platforms like TripAdvisor, Booking.com and Google Maps all face this challenge. This tool demonstrates how data science can detect coordinated review fraud at scale.
+This tool takes a dataset of hotel reviews and scores every single one across 8 different fraud signals — things like suspiciously short text, duplicate reviews posted across multiple hotels, or a reviewer who somehow visited 5 different hotels on the same day. Each review ends up with a suspicion score from 0 to 100, and the results are displayed in an interactive dashboard you can explore.
 
 ---
 
-## 🚀 Live Demo
+## What it does
 
-> **Run it locally** — see setup instructions below.
+You load in a CSV of hotel reviews, and the app:
 
----
+- Runs every review through 8 fraud detection checks
+- Gives each review a suspicion score (0 = looks genuine, 100 = very suspicious)
+- Shows you which hotels have the most flagged reviews
+- Groups together reviews that are nearly identical word-for-word
+- Flags days where a hotel got an unusual spike in reviews
+- Lets you paste in any review text and score it live
 
-## ✨ Features
-
-| Feature | Description |
-|---|---|
-| **8 Fraud Signals** | Length, Vague Language, Extreme Sentiment, Duplicates, Reviewer Behaviour, Rating Anomaly, Timing Bursts, Exclamation Overuse |
-| **Interactive Dashboard** | 7-tab Streamlit app with Plotly charts — hover, zoom, click-to-filter |
-| **Suspicion Scoring** | Each review scored 0–100 with colour-coded risk labels |
-| **Upload Any CSV** | Works with any hotel review dataset, not just the sample data |
-| **Live Review Analyser** | Paste any review text and get an instant fraud score |
-| **Click-to-Filter** | Click a hotel bar → see its reviews; click a signal bar → see affected reviews |
-| **Zoomable Timeline** | Range slider + 3m/6m/1y/All buttons with burst day annotations |
-| **Duplicate Clustering** | TF-IDF cosine similarity finds near-identical review clusters |
+The whole thing runs in a Streamlit web app with interactive Plotly charts — you can hover over data points, click on a hotel bar to see its reviews, zoom into specific time periods, and filter everything from the sidebar.
 
 ---
 
-## 📊 Dashboard Tabs
+## The 8 fraud signals
 
-```
-📊 Overview          — Hero stats, donut chart, rating distribution, zoomable timeline
-🚨 Suspicious Reviews — Top N flagged reviews as styled investigation cards
-🏨 Hotels            — Bar chart + scatter plot with click-to-drill-down
-📡 Signals           — Radar chart + bar chart with click-to-filter reviews
-🌡️ Heatmap           — Interactive hotel × signal grid
-📋 Duplicates        — Near-identical review clusters
-🔎 Search            — Search by hotel/text + live single review analyser
-```
+These are the checks I built into the scoring system. Each one adds points to the suspicion score:
 
----
-
-## 🔬 Fraud Signals Explained
-
-| Signal | Trigger | Score |
+| Signal | What I look for | Points |
 |---|---|---|
-| **S1 — Length** | Under 15 words + rating 1 or 5 | +20 pts |
-| **S2 — Vague Language** | Vague-to-specific word ratio > 3 | +15 pts |
-| **S3 — Extreme Sentiment** | TextBlob polarity > 0.8 or < -0.8 | +15 pts |
-| **S4 — Duplicate Text** | 80%+ cosine similarity to another review | +20 pts |
-| **S5 — Reviewer Behaviour** | Multi-hotel same-day posting or always extreme ratings | +10–15 pts |
-| **S6 — Rating Anomaly** | Hotel with 90%+ five-star reviews | +10 pts |
-| **S7 — Timing Burst** | 5+ reviews for one hotel on one day | +15 pts |
-| **S8 — Exclamation Overuse** | 3+ exclamation marks in a review | +10 pts |
+| **Length** | Very short review (under 15 words) with a 1 or 5 star rating | +20 |
+| **Vague Language** | Way more "amazing/perfect/terrible" than actual hotel details | +15 |
+| **Extreme Sentiment** | TextBlob polarity above 0.8 or below -0.8 — unnaturally extreme | +15 |
+| **Duplicate Text** | 80%+ text overlap with another review in the dataset | +20 |
+| **Reviewer Behaviour** | Same person reviewing multiple hotels on the same day, or only ever giving 1s and 5s | +10–15 |
+| **Rating Anomaly** | Hotel where over 90% of reviews are 5 stars | +10 |
+| **Timing Burst** | 5 or more reviews for one hotel posted on a single day | +15 |
+| **Exclamation Overuse** | 3+ exclamation marks — real reviews rarely look this enthusiastic | +10 |
 
-### Suspicion Score Labels
+Once all signals are tallied up, the score gets capped at 100 and labelled:
+
 ```
- 0–20  ✅ Genuine          (green)
-21–40  🟡 Low Suspicion    (yellow)
-41–60  🟠 Moderate         (orange)
-61–80  🔴 High Suspicion   (red)
-81–100 🚨 Likely Fake      (dark red)
+ 0–20  ✅ Genuine
+21–40  🟡 Low Suspicion
+41–60  🟠 Moderate
+61–80  🔴 High Suspicion
+81–100 🚨 Likely Fake
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## What I found in the sample dataset
 
-- **Python 3.8+**
-- **Streamlit** — interactive web app framework
-- **Plotly** — interactive charts (donut, bar, scatter, radar, heatmap, timeline)
-- **Pandas / NumPy** — data manipulation
-- **TextBlob** — NLP sentiment analysis
-- **scikit-learn** — TF-IDF vectorisation + cosine similarity for duplicate detection
-- **Seaborn / Matplotlib** — static chart generation
-- **WordCloud / Pillow** — word cloud images
+Running this on 35,912 real hotel reviews:
+
+- **11.2%** of reviews flagged at least one fraud signal
+- **2,044** clusters of near-identical duplicate reviews found
+- The biggest pattern was **Reviewer Behaviour** — flagged on 12,948 reviews
+- The most suspicious hotel in the dataset was **A Swallow's Nest Motel**
 
 ---
 
-## ⚙️ Setup & Installation
+## Dashboard tabs
 
-### 1. Clone the repository
+```
+📊 Overview           stats summary, donut chart, rating breakdown, zoomable timeline
+🚨 Suspicious Reviews  top flagged reviews shown as investigation-style cards
+🏨 Hotels             click any hotel bar to drill into its individual reviews
+📡 Signals            radar chart + bar chart, click a signal to see which reviews triggered it
+🌡️ Heatmap            hotel × signal grid showing where fraud clusters
+📋 Duplicates         groups of near-identical reviews side by side
+🔎 Search             search by hotel name or keyword + live single review scorer
+```
+
+---
+
+## Tech stack
+
+- **Python** — main language
+- **Streamlit** — the web app
+- **Plotly** — all the interactive charts
+- **Pandas / NumPy** — data wrangling
+- **TextBlob** — sentiment analysis for Signal 3
+- **scikit-learn** — TF-IDF + cosine similarity for duplicate detection
+- **Matplotlib / Seaborn** — static chart exports
+- **WordCloud / Pillow** — word cloud image generation
+
+---
+
+## Getting it running
+
+**1. Clone the repo**
 ```bash
-git clone https://github.com/YOUR_USERNAME/fake-review-detector.git
+git clone https://github.com/luchiiloka/fake-review-detector.git
 cd fake-review-detector
 ```
 
-### 2. Create a virtual environment
+**2. Set up a virtual environment**
 ```bash
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
 ```
 
-### 3. Install dependencies
+**3. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Add your data
-Place your `hotel_reviews.csv` in the `data/` folder.
+**4. Drop in your data**
 
-**Required columns:**
-| Column | Description |
+Put your `hotel_reviews.csv` in the `data/` folder. It needs these columns:
+
+| Column | What it is |
 |---|---|
-| `reviews.text` | Review body text |
-| `reviews.rating` | Numeric rating |
+| `reviews.text` | The actual review text |
+| `reviews.rating` | Star rating (numeric) |
 | `name` | Hotel name |
-| `reviews.username` | Reviewer username |
-| `reviews.date` | Review date |
+| `reviews.username` | Who wrote it |
+| `reviews.date` | When it was written |
 
-### 5. Run the app
+**5. Run the app**
 ```bash
 streamlit run app.py
 ```
 
-### 6. (Optional) Generate static output files
+**6. Or just generate the static reports**
 ```bash
 python detector.py
 ```
-This creates all 8 output files in the `output/` folder.
+This drops 8 output files into the `output/` folder — charts, a full HTML dashboard, and a markdown investigation report.
 
 ---
 
-## 📁 Project Structure
+## Project structure
 
 ```
 fake-review-detector/
 │
-├── app.py               # Streamlit web application
-├── detector.py          # Core analysis engine + static output generator
-├── requirements.txt     # Python dependencies
-├── README.md            # This file
+├── app.py               # Streamlit web app
+├── detector.py          # Analysis engine + static output generator
+├── requirements.txt     # Dependencies
+├── README.md
 │
 ├── data/
-│   └── hotel_reviews.csv    # Input dataset (35,912 reviews)
+│   └── hotel_reviews.csv
 │
 └── output/
-    ├── dashboard.html           # Self-contained HTML report
-    ├── fraud_report.md          # Markdown investigation report
-    ├── signal_radar.png         # Radar chart (8 fraud signals)
-    ├── suspicion_heatmap.png    # Hotel × signal heatmap
+    ├── dashboard.html
+    ├── fraud_report.md
+    ├── signal_radar.png
+    ├── suspicion_heatmap.png
     ├── genuine_vs_fake_wordcloud.png
     ├── rating_comparison.png
     ├── timeline_bursts.png
@@ -162,50 +165,32 @@ fake-review-detector/
 
 ---
 
-## 📈 Key Findings (Sample Dataset)
-
-- **35,912** hotel reviews analysed
-- **11.2%** of reviews show at least one fraud signal
-- **2,044** duplicate text clusters detected
-- **#1 fraud pattern:** Reviewer Behaviour — triggered on 12,948 reviews
-- **Most suspicious hotel:** A Swallow's Nest Motel
-
----
-
-## 🚀 Deployment
-
-Deploy for free on **Streamlit Cloud**:
+## Deploying it online (free)
 
 1. Push this repo to GitHub
 2. Go to [share.streamlit.io](https://share.streamlit.io)
-3. Connect your GitHub account
-4. Select this repo → set main file to `app.py`
-5. Click **Deploy** — your app gets a public URL!
+3. Connect your GitHub and select this repo
+4. Set the main file to `app.py`
+5. Hit deploy — you'll get a public link straight away
 
 ---
 
-## 💡 Future Improvements
+## What I'd add next
 
-- [ ] Train a supervised ML classifier using suspicion scores as labels
-- [ ] Add REST API endpoint (FastAPI) for real-time review scoring
-- [ ] Integrate SQLite for persistent storage and trend tracking
-- [ ] Email alert system for burst activity detection
-- [ ] Multilingual support with language detection
+- [ ] Train an actual ML classifier using the suspicion scores as training labels
+- [ ] Build a FastAPI endpoint so other apps can score reviews via API
+- [ ] Add a database so results persist between sessions
+- [ ] Email alerts when a burst is detected
+- [ ] Language detection for non-English reviews
 
 ---
 
-## 👤 Author
+## About me
 
 **Blessing Iloka**
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
+- GitHub: [@luchiiloka](https://github.com/luchiiloka)
 - Email: bi21aaj@herts.ac.uk
 
 ---
 
-## 📄 License
-
-This project is open source under the [MIT License](LICENSE).
-
----
-
-*Built with Python & Streamlit · Fake Review Detector v1.0*
+MIT License — feel free to use or build on this.
